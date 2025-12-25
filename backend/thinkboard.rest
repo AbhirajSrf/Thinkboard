@@ -1,0 +1,8 @@
+POST http://localhost:5001/api/notes
+Content-Type: application/json
+
+{
+  "title": "It works 🎉",
+  "content": "this is from .rest"
+}
+
