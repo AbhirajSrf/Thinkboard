@@ -1,42 +1,41 @@
 import api from "../lib/axios";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import toast from "react-hot-toast";
 import { ArrowLeftIcon, LoaderIcon, Trash2Icon } from "lucide-react";
+import RateLimitedUI from "../components/RateLimitedUI";
 
-const NoteDetailpage = () => {
-  const [note, setNote] = useState();
+const NoteDetailPage = () => {
+  const [note, setNote] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [isRatelimited, setIsRateLimited] = useState(false);
-  const navigate = useNavigate();
+  const [isRateLimited, setIsRateLimited] = useState(false);
 
+  const navigate = useNavigate();
   const { id } = useParams();
 
   useEffect(() => {
     const fetchNote = async () => {
       try {
-        const res = await api(`/notes/${id}`);
+        const res = await api.get(`/notes/${id}`);
         setNote(res.data);
+        setIsRateLimited(false);
       } catch (error) {
         console.log("Error in fetching note", error);
-        toast.error("Failed to fetch the note");
-
         if (error.response?.status === 429) {
           setIsRateLimited(true);
         } else {
-          toast.error("Failed to load notes");
+          toast.error("Failed to fetch the note");
         }
       } finally {
-        setLoading(true);
+        setLoading(false); // Fix: was true before
       }
     };
-
     fetchNote();
   }, [id]);
 
   const handleDelete = async () => {
+    if (isRateLimited) return;
     if (!window.confirm("Are you sure you want to delete this note?")) return;
 
     try {
@@ -50,11 +49,13 @@ const NoteDetailpage = () => {
   };
 
   const handleSave = async () => {
+    if (isRateLimited) return;
     if (!note.title.trim() || !note.content.trim()) {
       toast.error("Please add a title or content");
       return;
     }
 
+    setSaving(true);
     try {
       await api.put(`/notes/${id}`, note);
       toast.success("Note saved successfully");
@@ -75,6 +76,14 @@ const NoteDetailpage = () => {
     );
   }
 
+  if (isRateLimited) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <RateLimitedUI />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-base-200">
       <div className="container mx-auto px-4 py-8">
@@ -87,6 +96,7 @@ const NoteDetailpage = () => {
             <button
               onClick={handleDelete}
               className="btn btn-error btn-outline"
+              disabled={isRateLimited}
             >
               <Trash2Icon className="h-5 w-5" />
               Delete Note
@@ -102,7 +112,7 @@ const NoteDetailpage = () => {
                 <input
                   type="text"
                   placeholder="Note Title"
-                  className="input input-border"
+                  className="input input-bordered"
                   value={note.title}
                   onChange={(e) => setNote({ ...note, title: e.target.value })}
                 />
@@ -114,7 +124,7 @@ const NoteDetailpage = () => {
                 </label>
                 <textarea
                   placeholder="Write your note here..."
-                  className="textarea textarea-border h-32"
+                  className="textarea textarea-bordered h-32"
                   value={note.content}
                   onChange={(e) =>
                     setNote({ ...note, content: e.target.value })
@@ -122,10 +132,10 @@ const NoteDetailpage = () => {
                 />
               </div>
 
-              <div className="card-action justify-end">
+              <div className="card-actions justify-end">
                 <button
                   className="btn btn-primary"
-                  disabled={saving}
+                  disabled={saving || isRateLimited}
                   onClick={handleSave}
                 >
                   {saving ? "Saving..." : "Save Changes"}
@@ -139,4 +149,4 @@ const NoteDetailpage = () => {
   );
 };
 
-export default NoteDetailpage;
+export default NoteDetailPage;
