@@ -1,0 +1,95 @@
+MongoDB-database
+
+express- web framework, a ready to use toolbox for building web apps faster and more easily
+#saves time
+#Makes code cleaner and more organized
+#Handles common tasks (like routing, error handling etc)
+
+react- forntend library
+#basics- components, useState or useEffect 
+
+nodejs- runtime, allows to run js on server 
+#normally js runs on client side but nodejs helps to run it on server
+
+API(application programming interface)
+Rest api- popular one
+it uses HTTP methods (GET, POST, PUT, DELETE)
+
+
+BACKEND
+npm init -y
+npm install express (@--- for version)
+npm install nodemon (for live server)
+npm install mongoose 
+npm i dotenv
+npm i @upstash/ratelimit@2.0.5 @upstash/redis@1.34.9
+npm i cors
+
+
+HTTP Status code
+#1xx-infromational
+#2xx-success
+200-ok
+201-create(post request)
+#3xx-redirection
+301-moved permanently
+#4xx-client errors
+401-unatuhorized
+404-page not found 
+429-to many request
+#5xx-server errors
+501-internal server error
+503-service unavailable
+
+ENDPOINT
+Endpoint is a combination of url + http method that lets client to interact with specific resources
+
+JSON helps APIs send and receive data in a structured way.
+Key point to remember
+❌ JSON does not fetch data
+✅ JSON is the format used to transfer data
+✅ fetch, axios, etc. are what actually fetch data
+
+Simple analogy
+API → Restaurant
+Fetch/Axios → Waiter
+JSON → Plate the food is served on 🍽️
+
+How it works with APIs
+Your app requests data from an API (using fetch, axios, etc.)
+#The API responds with data
+#That response is usually in JSON format
+#Your app parses the JSON and uses the data
+
+git add .
+git commit -m "message"
+git pust
+
+
+MIDDLEWARE
+Middleware is a function that runs in the middle between the request and the response, it works before response. It is used to auth check.
+
+RATE LIMITING
+Rate limiting is a way to control how often someone can do something on a website or app like how many they can refresh a page, request to an API, or try to log in.
+-For example: only 100 requests per user every 15min
+we can use upstash
+ 
+
+FRONTEND (rafce)
+npm create vite@latest
+- react
+ - js
+npm install
+npm run dev
+npm i react-router
+npm i react-hot-toast, (notification)react-hot-toast.com
+npm i lucide-react, for icons
+npm i axios
+bg.ibleick.com
+
+daisyUI.com - tailwindcss library 
+npm i daisyui@ -D
+
+
+CORS(cross-origin resource sharing)
+it is a browser security rule. When a website tries to get data form another website -like your frontend calling  an API on a different domain - the browser might block it for a security reasons.
